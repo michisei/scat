@@ -9,7 +9,8 @@ import java.io.Reader;
 import java.util.Optional;
 
 public class SlowCat {
-	static final int DEFAULT_DELAY_MS = 10;
+	static final int         DEFAULT_DELAY_MS = 10;
+	private static final int READ_BUFFER_SIZE = 1048576;
 
 	public static void main(String[] args) {
 		Options opts = Options.parseArgs(args);
@@ -58,15 +59,20 @@ public class SlowCat {
 			.orElse(new InputStreamReader(System.in));
 		try {
 			BufferedReader reader = new BufferedReader(rd);
-			reader.lines().map(x -> x + '\n').flatMapToInt(x -> x.chars()).forEach(
-				c -> {
-					System.out.print(String.valueOf((char) c));
-					System.out.flush();
-					try {
-						Thread.sleep(this.sleepMs);
-					} catch (InterruptedException e) {}
-				}
-			);
+			char[] fragment = new char[READ_BUFFER_SIZE];
+			int read_size;
+			do {
+				read_size = reader.read(fragment);
+				String.valueOf(fragment).chars().limit(read_size).forEach(
+					c -> {
+						System.out.print(String.valueOf((char) c));
+						System.out.flush();
+						try {
+							Thread.sleep(this.sleepMs);
+						} catch (InterruptedException e) {}
+					}
+				);
+			} while (read_size == READ_BUFFER_SIZE);
 
 			reader.close();
 		} catch (IOException e) {

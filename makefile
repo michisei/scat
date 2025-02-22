@@ -19,13 +19,13 @@ build/SlowCat/%.class: src/SlowCat/%.java build/SlowCat
 build/SlowCat: build
 	if [ ! -d '$@' ]; \
 	then              \
-		mkdir $@;     \
+	    mkdir $@;     \
 	fi                \
 
 build:
 	if [ ! -d '$@' ]; \
 	then              \
-		mkdir $@;     \
+	    mkdir $@;     \
 	fi                \
 
 bin:
@@ -34,7 +34,7 @@ bin:
 clean_build/%.class:
 	-if [ -f "$(patsubst clean_%,%,$@)" ]; \
 	then                                   \
-		rm -v "$(patsubst clean_%,%,$@)";  \
+	    rm -v "$(patsubst clean_%,%,$@)";  \
 	fi                                     \
 
 clean_build/SlowCat: 
@@ -46,7 +46,7 @@ clean_build: $(patsubst build/%.class,clean_build/%.class,$(obj_files)) clean_bu
 clean_$(exec_out):
 	-if [ -f "$(patsubst clean_%,%,$@)" ]; \
 	then                                   \
-		rm -v "$(patsubst clean_%,%,$@)";  \
+	    rm -v "$(patsubst clean_%,%,$@)";  \
 	fi                                     \
 
 clean_bin: clean_$(exec_out)
