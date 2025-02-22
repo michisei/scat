@@ -12,10 +12,10 @@ obj_files := $(patsubst src/%.c,obj/%.o,$(sources))
 
 all: bin $(exec_out)
 
-$(exec_out): $(obj_files)
+$(exec_out): obj $(obj_files)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
-obj/%.o: src/%.c obj
+obj/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 obj:
