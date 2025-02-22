@@ -40,7 +40,7 @@ public class SlowCat {
 	}
 
 	public void write() {
-		Reader rd = this.filename
+		Optional<Reader> optRd = this.filename
 			.flatMap(x -> {
 				try {
 					return Optional.of(x.equals("-") ?
@@ -54,10 +54,12 @@ public class SlowCat {
 						"[\033[1;33mWARNING\033[0m] " + e.getMessage()
 					);
 				}
-				System.exit(1);
 				return Optional.empty();
-			})
-			.orElse(new InputStreamReader(System.in));
+			});
+		if (optRd.isEmpty()) {
+			return;
+		}
+		Reader rd = optRd.orElse(new InputStreamReader(System.in));
 		try {
 			BufferedReader reader = new BufferedReader(rd);
 			char[] fragment = new char[READ_BUFFER_SIZE];
