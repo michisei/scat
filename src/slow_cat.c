@@ -24,8 +24,9 @@ int perform_scat(const char* fn, int delay) {
 	}
 	if (f == NULL) {
 		fprintf(stderr, 
-			"\033[1;33mWARNING\033[0m] Could not open file '%s': %s"
+			"[\033[1;33mWARNING\033[0m] Could not open file '%s': %s\n"
 		, fn, strerror(errno));
+		return 1;
 	}
 
 	size_t n_read;
