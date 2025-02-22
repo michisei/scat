@@ -1,39 +1,55 @@
-CC=gcc
-CFLAGS= -g -Wall -Wpedantic 
+CC=javac
 
-exec_out=bin/scat
+exec_out=bin/scat.jar
 
-LD=gcc
-LDFLAGS= 
-LDLIBS=
+LD=jar 
+LDFLAGS= cfe 
 
-sources := src/options.c src/os_utils.c src/slow_cat.c
-obj_files := $(patsubst src/%.c,obj/%.o,$(sources))
+sources   := src/SlowCat/SlowCat.java src/SlowCat/Options.java
+obj_files := build/SlowCat/SlowCat.class build/SlowCat/Options.class
 
 all: bin $(exec_out)
 
 $(exec_out): $(obj_files)
-	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
+	$(LD) $(LDFLAGS) $@ $(patsubst build/%.class,%,$<) $(patsubst build/%.class,-C build %.class,$^)
 
-obj/%.o: src/%.c obj
-	$(CC) $(CFLAGS) -c -o $@ $<
+build/SlowCat/%.class: src/SlowCat/%.java build/SlowCat
+	$(CC) -cp src -d build $<
 
-obj:
-	mkdir $@
+build/SlowCat: build
+	if [ ! -d '$@' ]; \
+	then              \
+		mkdir $@;     \
+	fi                \
+
+build:
+	if [ ! -d '$@' ]; \
+	then              \
+		mkdir $@;     \
+	fi                \
 
 bin:
 	mkdir $@
 
-clean_obj/%.o:
-	-rm $(patsubst clean_%,%,$@)
+clean_build/%.class:
+	-if [ -f "$(patsubst clean_%,%,$@)" ]; \
+	then                                   \
+		rm -v "$(patsubst clean_%,%,$@)";  \
+	fi                                     \
 
-clean_obj: $(patsubst obj/%.o,clean_obj/%.o,$(obj_files))
+clean_build/SlowCat: 
+	-rm -d $(patsubst clean_%,%,$@)
+
+clean_build: $(patsubst build/%.class,clean_build/%.class,$(obj_files)) clean_build/SlowCat
 	-rm -d $(patsubst clean_%,%,$@)
 
 clean_$(exec_out):
-	-rm $(exec_out)
+	-if [ -f "$(patsubst clean_%,%,$@)" ]; \
+	then                                   \
+		rm -v "$(patsubst clean_%,%,$@)";  \
+	fi                                     \
 
 clean_bin: clean_$(exec_out)
 	-rm -d $(patsubst clean_%,%,$@)
 
-clean: clean_bin clean_obj
+clean: clean_bin clean_build
