@@ -47,13 +47,14 @@ public class SlowCat {
 						new InputStreamReader(System.in) : new FileReader(x));
 				} catch (FileNotFoundException e) {
 					System.err.println(
-						"\033[1;33mWARNING\033[0m] Could not open file '" + this.filename + "' - "
-						+ "file is not found."
+						"\033[1;33mWARNING\033[0m] Could not open file '"
+						+ this.filename.orElse("- (stdin)") + "'."
 					);
 					System.err.println(
 						"\033[1;33mWARNING\033[0m] " + e.getMessage()
 					);
 				}
+				System.exit(1);
 				return Optional.empty();
 			})
 			.orElse(new InputStreamReader(System.in));
