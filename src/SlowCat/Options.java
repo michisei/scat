@@ -7,12 +7,17 @@ import java.util.stream.Stream;
 public class Options {
 	public static final String USAGE_STATEMENT = 
 """
-usage: java SlowCat [options] [file]...\n
-A more simplified and slower tool that mimics the behaviour of the 'cat' command.\n
-It does not retain the full functionalities of the original tool.\n\n
-Options:\n
-  -h, --help  display this help and exit.\n
-  -d, --delay specify delay for each character in milliseconds.\n
+usage: java SlowCat [options] [file]...
+A more simplified and slower tool that mimics the behaviour of the 'cat' command.
+The tool will print characters one by one with a specified delay.
+It does not retain the full functionalities of the original tool.
+
+Options:
+  -h, --help  display this help and exit.
+  -d, --delay specify delay for each character in milliseconds.
+              Note: Java Edition does not accept decimals.
+
+scat Java edition, Build 202502231855.
 """;
 
 	public final int delayMs;
@@ -50,12 +55,16 @@ Options:\n
 
 			if (args[i].equals("-d") || args[i].equals("--delay")) {
 				if (args.length < i + 1) {
-					System.err.println("[\033[1;31mERROR\033[0m] Missing argument for " + args[i] + ".");
+					System.err.println(
+						"[\033[1;31mERROR\033[0m] Missing argument for " + args[i] + "."
+					);
 					System.exit(1);
 				}
-				
+
 				if (!args[i + 1].chars().allMatch(x -> x >= 48 && x < 58)) {
-					System.err.println("[\033[1;31mERROR\033[0m] Expecting a number for " + args[i] + ".");
+					System.err.println(
+						"[\033[1;31mERROR\033[0m] Expecting a number for " + args[i] + "."
+					);
 					System.exit(1);
 				}
 
