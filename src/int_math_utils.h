@@ -5,7 +5,9 @@
 extern "C" {
 #endif // __cplusplus
 
+int quick_mul_1000_unsigned(int n);
 int quick_mul_1000_signed(int n);
+long quick_mul_1000_unsigned_long(long n);
 long quick_mul_1000_signed_long(long n);
 
 #ifdef __cplusplus
