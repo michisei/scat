@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -g -Wall -Wpedantic 
 
-SCAT_VER_DEF = -DSCAT_VER=\"Build\ 202502240228\"
+SCAT_VER_DEF = -DSCAT_VER=\"Build\ 202502240427\"
 
 exec_out=bin/scat
 
