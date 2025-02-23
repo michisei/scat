@@ -55,7 +55,7 @@ static int parse_3dp_decimal(const char* numstr) {
 
 	if (*int_stop_ptr == '.') {
 		char dp_3[4] = "000";
-		(void) strncpy(dp_3, int_stop_ptr + 1, 4 * sizeof(const char));
+		(void) strncpy(dp_3, int_stop_ptr + 1, 3 * sizeof(const char));
 		for (int i = 0; i < 3; i++) {
 			if (!is_digit_char(dp_3[i]))
 				dp_3[i] = '0';
