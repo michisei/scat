@@ -29,35 +29,31 @@ public class SlowCat {
 			.forEach(x -> x.write());
 	}
 
-	private final Optional<String> filename;
+	private final String filename;
 	private final int sleepMs;
 
 	public SlowCat(Optional<String> fn, int sleepMs) {
-		this.filename = fn;
+		this.filename = fn.orElse("-");
 		this.sleepMs = sleepMs;
 	}
 
 	public void write() {
-		Optional<Reader> optRd = this.filename
-			.flatMap(x -> {
-				try {
-					return Optional.of(x.equals("-") ?
-						new InputStreamReader(System.in) : new FileReader(x));
-				} catch (FileNotFoundException e) {
-					System.err.println(
-						"[\033[1;33mWARNING\033[0m] Could not open file '"
-						+ this.filename.orElse("- (stdin)") + "'."
-					);
-					System.err.println(
-						"[\033[1;33mWARNING\033[0m] " + e.getMessage()
-					);
-				}
-				return Optional.empty();
-			});
-		if (optRd.isEmpty()) {
-			return;
+        Reader rd = new InputStreamReader(System.in);
+		if (!this.filename.equals("-")) {
+			try {
+				rd = new FileReader(this.filename);
+			} catch (FileNotFoundException e) {
+				System.err.println(
+					"[\033[1;33mWARNING\033[0m] Could not open file '"
+					+ this.filename + "'."
+				);
+				System.err.println(
+					"[\033[1;33mWARNING\033[0m] " + e.getMessage()
+				);
+				return;
+			}
 		}
-		Reader rd = optRd.orElse(new InputStreamReader(System.in));
+
 		try {
 			BufferedReader reader = new BufferedReader(rd);
 			char[] fragment = new char[READ_BUFFER_SIZE];
@@ -70,7 +66,15 @@ public class SlowCat {
 						System.out.flush();
 						try {
 							Thread.sleep(this.sleepMs);
-						} catch (InterruptedException e) {}
+						} catch (InterruptedException e) {
+							// https://stackoverflow.com/questions/3976344/handling-interruptedexception-in-java
+							// set interrupt flag
+							Thread.currentThread().interrupt();
+							System.err.println(
+								"[\033[1;36mNOTE\033[0m] Thread sleep interrupted: "
+										+ e.getMessage()
+							);
+						}
 					}
 				);
 			} while (read_size == READ_BUFFER_SIZE);
