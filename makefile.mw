@@ -1,6 +1,8 @@
 CC=gcc
 CFLAGS= -g -Wall -Wpedantic 
 
+SCAT_VER_DEF = "-DSCAT_VER=\"Build 202502231824\""
+
 exec_out=bin\scat.exe
 
 LD=gcc
@@ -16,7 +18,7 @@ $(exec_out): $(obj_files)
 	$(LD) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 obj\\%.o: src\\%.c
-	$(CC) $(CFLAGS) -c -o $@ $<
+	$(CC) $(CFLAGS) $(SCAT_VER_DEF) -c -o $@ $<
 
 obj:
 	mkdir $@

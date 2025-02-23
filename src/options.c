@@ -13,6 +13,10 @@ static int is_parsable_int(const char* s) {
 	return *s >= 48 && *s < 58;
 }
 
+#ifndef SCAT_VER
+#define SCAT_VER "version 0.1"
+#endif // SCAT_VER
+
 const char* usage_info_fmt = 
 	"usage: %s [options] [file]...\n"
 	"A more simplified and slower tool that mimics the behaviour of the cat "
@@ -25,7 +29,9 @@ const char* usage_info_fmt =
 	"  -d, --delay specify delay for each character in milliseconds.\n"
 	"              For C edition only: You can specify three decimal places "
 	              "for the delay for microsecond precision.\n"
-	"              Note that the actual timing may not be accurate.\n";
+	"              Note that the actual timing may not be accurate.\n"
+	"\n"
+	"scat C edition, " SCAT_VER ".\n";
 
 void print_usage_info(const char* arg0) {
 	(void) fprintf(stderr, usage_info_fmt, arg0);
