@@ -7,7 +7,7 @@ LD=gcc
 LDFLAGS= 
 LDLIBS=
 
-sources := src\options.c src\os_utils.c src\slow_cat.c
+sources := src\int_math_utils.c src\options.c src\os_utils.c src\slow_cat.c
 obj_files := $(patsubst src\\%.c,obj\\%.o,$(sources))
 
 all: bin obj $(exec_out)
