@@ -31,7 +31,7 @@ scat Java edition, Build 202502231855.
 	}
 
 	private static void cpyPosArgs(Stream.Builder<String> argBuilder, Stream<String> args) {
-		args.forEach(x -> argBuilder.accept(x));
+		args.forEach(argBuilder::accept);
 	}
 
 	private static void printUsage() {
@@ -43,37 +43,37 @@ scat Java edition, Build 202502231855.
 		int delayMs = SlowCat.DEFAULT_DELAY_MS;
 
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("--")) {
-				cpyPosArgs(argBuilder, Arrays.stream(args, i, args.length));
-				return new Options(delayMs, argBuilder.build(), false);
-			}
+            switch (args[i]) {
+                case "--" -> {
+                    cpyPosArgs(argBuilder, Arrays.stream(args, i, args.length));
+                    return new Options(delayMs, argBuilder.build(), false);
+                }
+                case "-h", "--help" -> {
+                    printUsage();
+                    return new Options(delayMs, argBuilder.build(), true);
+                }
+                case "-d", "--delay" -> {
+                    if (args.length < i + 1) {
+                        System.err.println(
+                                "[\033[1;31mERROR\033[0m] Missing argument for " + args[i] + "."
+                        );
+                        System.exit(1);
+                    }
 
-			if (args[i].equals("-h") || args[i].equals("--help")) {
-				printUsage();
-				return new Options(delayMs, argBuilder.build(), true);
-			}
+                    if (!args[i + 1].chars().allMatch(x -> x >= 48 && x < 58)) {
+                        System.err.println(
+                                "[\033[1;31mERROR\033[0m] Expecting a number for " + args[i] + "."
+                        );
+                        System.exit(1);
+                    }
 
-			if (args[i].equals("-d") || args[i].equals("--delay")) {
-				if (args.length < i + 1) {
-					System.err.println(
-						"[\033[1;31mERROR\033[0m] Missing argument for " + args[i] + "."
-					);
-					System.exit(1);
-				}
+                    delayMs = Integer.parseInt(args[i + 1]);
+                    i++;
+                    continue;
+                }
+            }
 
-				if (!args[i + 1].chars().allMatch(x -> x >= 48 && x < 58)) {
-					System.err.println(
-						"[\033[1;31mERROR\033[0m] Expecting a number for " + args[i] + "."
-					);
-					System.exit(1);
-				}
-
-				delayMs = Integer.parseInt(args[i + 1]);
-				i++;
-				continue;
-			}
-
-			argBuilder.accept(args[i]);
+            argBuilder.accept(args[i]);
 		}
 		return new Options(delayMs, argBuilder.build(), false);
 	}

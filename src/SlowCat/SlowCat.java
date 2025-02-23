@@ -26,9 +26,7 @@ public class SlowCat {
 		}
 
 		opts.posArgs.stream().map(x -> new SlowCat(Optional.of(x), opts.delayMs))
-			.forEach(x -> {
-				x.write();
-			});
+			.forEach(x -> x.write());
 	}
 
 	private final Optional<String> filename;
@@ -68,7 +66,7 @@ public class SlowCat {
 				read_size = reader.read(fragment);
 				String.valueOf(fragment).chars().limit(read_size).forEach(
 					c -> {
-						System.out.print(String.valueOf((char) c));
+						System.out.print((char) c);
 						System.out.flush();
 						try {
 							Thread.sleep(this.sleepMs);
