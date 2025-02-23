@@ -7,6 +7,8 @@ extern "C" {
 
 typedef struct{
 	int char_delay;
+	int char_udelay;
+	int use_usec_delay;
 } options_t;
 
 int parse_opts(options_t* opts_out, char** pos_args_out, int argc, char** argv);

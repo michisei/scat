@@ -14,7 +14,7 @@
 #define READ_BUFFER_SIZE 1048576
 #endif // READ_BUFFER_SIZE
 
-int perform_scat(const char* fn, int delay) {
+int perform_scat(const char* fn, int delay, int usecdelay) {
 	FILE* f;
 	char buf[READ_BUFFER_SIZE];
 	if (fn == NULL || strcmp(fn, "-") == 0) {
@@ -36,6 +36,8 @@ int perform_scat(const char* fn, int delay) {
 		for (int i = 0; i < n_read; i++) {
 			(void) putc(buf[i], stdout);
 			sleep_ms(delay);
+			if (usecdelay > 0)
+				sleep_us(usecdelay);
 		}
 	} while (n_read == READ_BUFFER_SIZE);
 
@@ -61,12 +63,12 @@ int main(int argc, char** argv) {
 		return 1;
 
 	if (pos_args[0] == NULL) {
-		(void) perform_scat(NULL, opts.char_delay);
+		(void) perform_scat(NULL, opts.char_delay, opts.char_udelay);
 		return 0;
 	}
 
 	for (char** i = pos_args; *i != NULL; i++) {
-		(void) perform_scat(*i, opts.char_delay);
+		(void) perform_scat(*i, opts.char_delay, opts.char_udelay);
 	}
 	return 0;
 }

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "int_math_utils.h"
+
 #include "options.h"
 
 static int is_parsable_int(const char* s) {
@@ -11,16 +13,22 @@ static int is_parsable_int(const char* s) {
 	return *s >= 48 && *s < 58;
 }
 
+const char* usage_info_fmt = 
+	"usage: %s [options] [file]...\n"
+	"A more simplified and slower tool that mimics the behaviour of the cat "
+	"command.\n"
+	"The tool will print characters one by one with a specified delay.\n"
+	"It does not retain the full functionalities of the original tool.\n"
+	"\n"
+	"Options:\n"
+	"  -h, --help  display this help and exit.\n"
+	"  -d, --delay specify delay for each character in milliseconds.\n"
+	"              For C edition only: You can specify three decimal places "
+	              "for the delay for microsecond precision.\n"
+	"              Note that the actual timing may not be accurate.\n";
+
 void print_usage_info(const char* arg0) {
-	(void) fprintf(stderr, "usage: %s [options] [file]...\n", arg0);
-	(void) fprintf(stderr, 
-		"A more simplified and slower tool that mimicks "
-		"the behaviout of cat. It does not retain the "
-		"full functionalities of the original tool.\n\n"
-	);
-	(void) fprintf(stderr, "Options:\n");
-	(void) fprintf(stderr, "  -h, --help  display this help and exit.\n");
-	(void) fprintf(stderr, "  -d, --delay specify delay for each character in milliseconds.\n");
+	(void) fprintf(stderr, usage_info_fmt, arg0);
 }
 
 static void __cpy_pos_args(char** pos_args_out, int argc, char** argv) {
@@ -29,6 +37,30 @@ static void __cpy_pos_args(char** pos_args_out, int argc, char** argv) {
 		pos_args_out[i] = argv[i];
 	}
 	pos_args_out[i] = NULL;
+}
+
+#define DECIMAL_RADIX 10
+#define ASCII_DOT 46
+#define ASCII_0 48
+#define ASCII_9_PLUS_1 58
+#define is_digit_char(c) ((c) >= ASCII_0 && (c) < ASCII_9_PLUS_1)
+#define parsable_3dp_char(c) ((c) == ASCII_DOT || is_digit_char(c))
+static int parse_3dp_decimal(const char* numstr) {
+	char* int_stop_ptr;
+	long r = quick_mul_1000_signed_long(strtol(numstr, &int_stop_ptr, DECIMAL_RADIX));
+
+	if (*int_stop_ptr == '.') {
+		char dp_3[4] = "000";
+		(void) strncpy(dp_3, int_stop_ptr + 1, 4 * sizeof(const char));
+		for (int i = 0; i < 3; i++) {
+			if (!is_digit_char(dp_3[i]))
+				dp_3[i] = '0';
+		}
+		dp_3[3] = '\0';
+		r += atoi(dp_3);
+	}
+
+	return (int) r;
 }
 
 int parse_opts(options_t* opts_out, char** pos_args_out, int argc, char** argv) {
@@ -54,7 +86,11 @@ int parse_opts(options_t* opts_out, char** pos_args_out, int argc, char** argv) 
 				return -1;
 			}
 
-			opts_out -> char_delay = atoi(argv[i + 1]);
+			// opts_out -> char_delay = atoi(argv[i + 1]);
+			opts_out -> char_udelay    = parse_3dp_decimal(argv[i + 1]);
+			opts_out -> char_delay     = opts_out -> char_udelay / 1000;
+			opts_out -> char_udelay   -= opts_out -> char_delay * 1000;
+			opts_out -> use_usec_delay = opts_out -> char_udelay != 0;
 			i++;
 			continue;
 		}
