@@ -6,6 +6,7 @@ extern "C" {
 #endif // __cplusplus
 
 void sleep_ms(int timems);
+void sleep_us(int timeus);
 
 #ifdef __cplusplus
 }
