@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "int_math_utils.h"
-
 #include "options.h"
 
 static int is_parsable_int(const char* s) {
@@ -53,7 +51,7 @@ static void __cpy_pos_args(char** pos_args_out, int argc, char** argv) {
 #define parsable_3dp_char(c) ((c) == ASCII_DOT || is_digit_char(c))
 static int parse_3dp_decimal(const char* numstr) {
 	char* int_stop_ptr;
-	long r = quick_mul_1000_signed_long(strtol(numstr, &int_stop_ptr, DECIMAL_RADIX));
+	long r = strtol(numstr, &int_stop_ptr, DECIMAL_RADIX) * 1000;
 
 	if (*int_stop_ptr == '.') {
 		char dp_3[4] = "000";

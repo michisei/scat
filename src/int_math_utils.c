@@ -2,7 +2,7 @@
 
 #include "int_math_utils.h"
 
-int quick_mul_1000_unsigned(int n) {
+int nomul_mul_1000_unsigned(int n) {
 	// Prime factorization of 1000:
 	//   2 * 2 * 2 * 5 * 5 * 5
 	//   2^3 * 5 * 5 * 5
@@ -19,16 +19,16 @@ int quick_mul_1000_unsigned(int n) {
 	return n;
 }
 
-int quick_mul_1000_signed(int n) {
+int nomul_mul_1000_signed(int n) {
 	if (n < 0) {
-		n = quick_mul_1000_unsigned(-n);
+		n = nomul_mul_1000_unsigned(-n);
 		return -(n & INT_MAX);
 	}
 
-	return quick_mul_1000_unsigned(n) & INT_MAX;
+	return nomul_mul_1000_unsigned(n) & INT_MAX;
 }
 
-long quick_mul_1000_unsigned_long(long n) {
+long nomul_mul_1000_unsigned_long(long n) {
 	// Prime factorization of 1000:
 	//   2 * 2 * 2 * 5 * 5 * 5
 	//   2^3 * 5 * 5 * 5
@@ -45,11 +45,11 @@ long quick_mul_1000_unsigned_long(long n) {
 	return n;
 }
 
-long quick_mul_1000_signed_long(long n) {
+long nomul_mul_1000_signed_long(long n) {
 	if (n < 0) {
-		n = quick_mul_1000_unsigned_long(-n);
+		n = nomul_mul_1000_unsigned_long(-n);
 		return -(n & LONG_MAX);
 	}
 
-	return quick_mul_1000_unsigned_long(n) & LONG_MAX;
+	return nomul_mul_1000_unsigned_long(n) & LONG_MAX;
 }

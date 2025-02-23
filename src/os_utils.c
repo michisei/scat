@@ -5,8 +5,6 @@
 #include <unistd.h>
 #endif // _WIN32
 
-#include "int_math_utils.h"
-
 #include "os_utils.h"
 
 #ifdef _WIN32
@@ -47,12 +45,12 @@ void sleep_ms(int timems) {
 	if (timems > WIN_MIN_SLEEP_TIME) {
 		int remainder_sleep_ms = timems % WIN_MIN_SLEEP_TIME;
 		Sleep(timems - remainder_sleep_ms);
-		win_usleep(quick_mul_1000_signed(remainder_sleep_ms));
+		win_usleep(remainder_sleep_ms * 1000);
 	} else {
-		win_usleep(quick_mul_1000_signed(timems));
+		win_usleep(timems * 1000);
 	}
 #else
-	usleep(quick_mul_1000_signed(timems));
+	usleep(timems * 1000);
 #endif // _WIN32
 }
 
