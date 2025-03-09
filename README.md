@@ -14,6 +14,11 @@ To build, simply run
 ```
 make
 ```
+or
+```
+mingw32-make -f makefile.mw
+```
+if you are using Mingw64 on Windows.
 After building, the executable should be inside the newly created `bin` folder.
 **Hint**: You can clean the project with `make clean` or `mingw32-make -f makefile.mw clean`
 ### Building (Manual)
